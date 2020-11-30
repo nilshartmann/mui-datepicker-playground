@@ -16,7 +16,7 @@ describe("Form contains valid inputs", () => {
     const screen = render(<App />);
     const { getByTestId, getAllByRole, getByLabelText } = screen;
 
-    const datum = getByLabelText("Choose date");
+    const datum = getByLabelText(/Choose date*/);
     await act(async () => {
       console.log("paste datum");
       // await fireEvent.mouseDown(datum!);
@@ -25,6 +25,6 @@ describe("Form contains valid inputs", () => {
 
     console.log("harry", datum?.outerHTML);
 
-    expect(datum.nodeValue).toBe("2020-12-12");
+    expect(datum).toHaveValue("2020-12-12");
   });
 });
