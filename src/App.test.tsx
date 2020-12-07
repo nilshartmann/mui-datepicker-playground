@@ -6,25 +6,37 @@ import {
   within,
   fireEvent,
   RenderResult,
+  getByText,
+  getAllByRole,
+  screen,
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import App from "./App";
 
-describe("Form contains valid inputs", () => {
-  it.only("should be able to change date", async () => {
-    console.log("before tests");
-    const screen = render(<App />);
-    const { getByTestId, getAllByRole, getByLabelText } = screen;
+it("MATERIAL UI WITH REACT FORM HOOK  - should be able to change date", async () => {
+  render(<App />);
 
-    const datum = getByLabelText(/Choose date*/);
-    await act(async () => {
-      console.log("paste datum");
-      // await fireEvent.mouseDown(datum!);
-      await userEvent.paste(datum!, "20201212");
-    });
+  const datum = within(screen.getByTestId("mui-react-form-hook")).getAllByRole(
+    "textbox"
+  )[0];
+  // await fireEvent.mouseDown(datum!);
+  //await userEvent.paste(datum!, "12/16/2020");
+  userEvent.clear(datum);
+  userEvent.type(datum, "12/16/2020");
+  expect(datum).toHaveValue("12/16/2020");
+});
 
-    console.log("harry", datum?.outerHTML);
+it("NATIVE TEXT FIELD - should paste date into native date input field", async () => {
+  render(<App />);
 
-    expect(datum).toHaveValue("2020-12-12");
-  });
+  const nativeForm = screen.getByTestId("native-date-field");
+  const datum = within(nativeForm).getByLabelText(/Native Date Field*/);
+  const button = within(nativeForm).getByText("Set Date");
+  expect(datum).toHaveValue("12/29/2020");
+  userEvent.clear(datum);
+  userEvent.type(datum, "12/16/2020");
+  userEvent.click(button);
+  const msg = within(nativeForm).getByTestId("nativeDateText");
+  expect(msg).toBeInTheDocument();
+  expect(msg.textContent).toBe("12/16/2020");
 });
