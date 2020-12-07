@@ -26,6 +26,25 @@ it("MATERIAL UI WITH REACT FORM HOOK  - should be able to change date", async ()
   expect(datum).toHaveValue("12/16/2020");
 });
 
+it.only("MATERIAL UI WITH USE STATE  - should be able to change date", async () => {
+  render(<App />);
+
+  const form = screen.getByTestId("mui-with-state");
+  const datum = within(form).getByRole("textbox");
+  // const datum = within(form).getByTestId("mui-textfield");
+  expect(datum).toHaveValue("12/28/2020");
+  // await fireEvent.mouseDown(datum!);
+  //await userEvent.paste(datum!, "12/16/2020");
+  userEvent.type(datum, "12162020");
+
+  userEvent.click(within(form).getByTestId("submitButton"));
+
+  const msg = within(form).getByTestId("submittedDate");
+  expect(msg).toBeInTheDocument();
+  expect(msg.textContent).toBe("2020-12-16T23:00:00.000Z");
+  expect(datum).toHaveValue("12/16/2020");
+});
+
 it("NATIVE TEXT FIELD - should paste date into native date input field", async () => {
   render(<App />);
 

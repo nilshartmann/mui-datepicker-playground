@@ -37,6 +37,32 @@ function MaterialUiWithReactHookFrom() {
   );
 }
 
+function MaterialUiWithUseState() {
+  const [selectedDate, handleDateChange] = useState<number | null>(
+    Date.parse("28 Dec 2020 00:00:00 GMT") // use a "fixed" default value, that does not depend on the "real" date today
+  );
+  const [submittedDate, setSubmittedDate] = React.useState("");
+  function onSubmit() {
+    setSubmittedDate(`${selectedDate} (${typeof selectedDate})`);
+  }
+
+  return (
+    <div data-testid="mui-with-state">
+      <h1>DatePicker with useState</h1>
+      <DatePicker
+        label="MaterialUI Example with useState"
+        renderInput={(props) => <TextField {...props} />}
+        onChange={handleDateChange}
+        value={selectedDate}
+      />
+      <button onClick={onSubmit} data-testid="submitButton">
+        Submit
+      </button>
+      {submittedDate && <pre data-testid="submittedDate">{submittedDate}</pre>}
+    </div>
+  );
+}
+
 function NativeDateField() {
   const [nativeDate, setNativeDate] = React.useState("");
   const nativeDateRef = React.useRef<HTMLInputElement | null>(null);
@@ -82,6 +108,7 @@ export default function App() {
   return (
     <LocalizationProvider dateAdapter={DateFnsUtils}>
       <MaterialUiWithReactHookFrom />
+      <MaterialUiWithUseState />
       <NativeDateField />
     </LocalizationProvider>
   );
